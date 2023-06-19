@@ -221,8 +221,8 @@ func xor(in, iv []byte) (out []byte) {
 	return
 }
 
-// NewSM4Cipher creates and returns a new cipher.Block.
-func NewSM4Cipher(key, iv []byte, mode algorithmMode) (cipher.Block, error) {
+// newSM4Cipher creates and returns a new cipher.Block.
+func newSM4Cipher(key, iv []byte, mode algorithmMode) (cipher.Block, error) {
 	if len(key) != SM4BlockSize {
 		return nil, errors.New("SM4: invalid key size " + strconv.Itoa(len(key)))
 	}

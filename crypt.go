@@ -69,13 +69,13 @@ func (c *crypt) Decrypt(data []byte) ([]byte, error) {
 func (c *crypt) getCipherBlock(name algorithmName) (cipher.Block, error) {
 	switch name {
 	case SM4:
-		return NewSM4Cipher(c.key, c.iv, c.algorithmMode)
+		return newSM4Cipher(c.key, c.iv, c.algorithmMode)
 	case DES:
-		return NewDESCipher(c.key, c.iv, c.algorithmMode)
+		return newDESCipher(c.key, c.iv, c.algorithmMode)
 	case DESEDE:
-		return NewDESEDECipher(c.key, c.iv, c.algorithmMode)
+		return newDESEDECipher(c.key, c.iv, c.algorithmMode)
 	case AES:
-		return NewAESCipher(c.key, c.iv, c.algorithmMode)
+		return newAESCipher(c.key, c.iv, c.algorithmMode)
 	default:
 		return nil, errors.New("not found algorithm name")
 	}

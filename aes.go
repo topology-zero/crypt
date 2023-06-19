@@ -5,8 +5,8 @@ import (
 	"crypto/cipher"
 )
 
-// NewAESCipher creates and returns a new cipher.Block.
-func NewAESCipher(key, iv []byte, mode algorithmMode) (cipher.Block, error) {
+// newAESCipher creates and returns a new cipher.Block.
+func newAESCipher(key, iv []byte, mode algorithmMode) (cipher.Block, error) {
 	newCipher, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err

@@ -5,8 +5,8 @@ import (
 	"crypto/des"
 )
 
-// NewDESEDECipher creates and returns a new cipher.Block.
-func NewDESEDECipher(key, iv []byte, mode algorithmMode) (cipher.Block, error) {
+// newDESEDECipher creates and returns a new cipher.Block.
+func newDESEDECipher(key, iv []byte, mode algorithmMode) (cipher.Block, error) {
 	newCipher, err := des.NewTripleDESCipher(key)
 	if err != nil {
 		return nil, err
