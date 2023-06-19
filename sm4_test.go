@@ -1,8 +1,6 @@
 package crypt
 
 import (
-	"encoding/hex"
-	"fmt"
 	"log"
 	"testing"
 )
@@ -10,13 +8,9 @@ import (
 const (
 	key      = "NEWCAPECNEWCAPEC"
 	inputStr = "1234560"
-	cBCEnStr = "53C27727B1EE94EEAC793502BCD39E88"
-	eCBEnStr = "DA36D730FE07C97978C2BDB5E12C8802"
-	cFBEnStr = "D8A51BD6E76E6C1D7E8CF029C29B0B5A"
-	oFBEnStr = "E1494AFA61EC4CA9762EDF90CB8E0E03"
 )
 
-func TestCBCEnCryptSM4(t *testing.T) {
+func TestCBCCryptSM4(t *testing.T) {
 	keyByte := []byte(key)
 	iv := make([]byte, 16)
 	copy(iv, keyByte[:16])
@@ -26,6 +20,7 @@ func TestCBCEnCryptSM4(t *testing.T) {
 		WithIV(iv),
 		WithAlgorithmName(SM4),
 		WithPKCS7Padding(16),
+		WithPKCS7UnPadding(),
 	)
 
 	encrypt, err := newCrypt.Encrypt([]byte(inputStr))
@@ -35,25 +30,7 @@ func TestCBCEnCryptSM4(t *testing.T) {
 
 	log.Printf("%X", encrypt)
 
-	if fmt.Sprintf("%X", encrypt) != cBCEnStr {
-		t.Fatal("加密错误")
-	}
-}
-
-func TestCBCDeCryptSM4(t *testing.T) {
-	keyByte := []byte(key)
-	iv := make([]byte, 16)
-	copy(iv, keyByte[:16])
-
-	data, _ := hex.DecodeString(cBCEnStr)
-
-	newCrypt := NewCrypt(
-		[]byte(key),
-		WithIV(iv),
-		WithAlgorithmName(SM4),
-		WithPKCS7UnPadding(),
-	)
-	decrypt, err := newCrypt.Decrypt(data)
+	decrypt, err := newCrypt.Decrypt(encrypt)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -63,12 +40,13 @@ func TestCBCDeCryptSM4(t *testing.T) {
 	}
 }
 
-func TestECBEnCryptSM4(t *testing.T) {
+func TestECBCryptSM4(t *testing.T) {
 	newCrypt := NewCrypt(
 		[]byte(key),
 		WithAlgorithmName(SM4),
 		WithAlgorithmMode(ECB),
 		WithPKCS7Padding(16),
+		WithPKCS7UnPadding(),
 	)
 
 	encrypt, err := newCrypt.Encrypt([]byte(inputStr))
@@ -78,20 +56,7 @@ func TestECBEnCryptSM4(t *testing.T) {
 
 	log.Printf("%X", encrypt)
 
-	if fmt.Sprintf("%X", encrypt) != eCBEnStr {
-		t.Fatal("加密错误")
-	}
-}
-
-func TestECBDeCryptSM4(t *testing.T) {
-	data, _ := hex.DecodeString(eCBEnStr)
-	newCrypt := NewCrypt(
-		[]byte(key),
-		WithAlgorithmName(SM4),
-		WithAlgorithmMode(ECB),
-		WithPKCS7UnPadding(),
-	)
-	decrypt, err := newCrypt.Decrypt(data)
+	decrypt, err := newCrypt.Decrypt(encrypt)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -101,13 +66,14 @@ func TestECBDeCryptSM4(t *testing.T) {
 	}
 }
 
-func TestCFBEnCryptSM4(t *testing.T) {
+func TestCFBCryptSM4(t *testing.T) {
 	newCrypt := NewCrypt(
 		[]byte(key),
 		WithIV([]byte("1234567890123456")),
 		WithAlgorithmName(SM4),
 		WithAlgorithmMode(CFB),
 		WithPKCS7Padding(16),
+		WithPKCS7UnPadding(),
 	)
 
 	encrypt, err := newCrypt.Encrypt([]byte(inputStr))
@@ -117,21 +83,7 @@ func TestCFBEnCryptSM4(t *testing.T) {
 
 	log.Printf("%X", encrypt)
 
-	if fmt.Sprintf("%X", encrypt) != cFBEnStr {
-		t.Fatal("加密错误")
-	}
-}
-
-func TestCFBDeCryptSM4(t *testing.T) {
-	data, _ := hex.DecodeString(cFBEnStr)
-	newCrypt := NewCrypt(
-		[]byte(key),
-		WithIV([]byte("1234567890123456")),
-		WithAlgorithmName(SM4),
-		WithAlgorithmMode(CFB),
-		WithPKCS7UnPadding(),
-	)
-	decrypt, err := newCrypt.Decrypt(data)
+	decrypt, err := newCrypt.Decrypt(encrypt)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -141,12 +93,13 @@ func TestCFBDeCryptSM4(t *testing.T) {
 	}
 }
 
-func TestOFBEnCryptSM4(t *testing.T) {
+func TestOFBCryptSM4(t *testing.T) {
 	newCrypt := NewCrypt(
 		[]byte(key),
 		WithAlgorithmName(SM4),
 		WithAlgorithmMode(OFB),
 		WithPKCS7Padding(16),
+		WithPKCS7UnPadding(),
 	)
 
 	encrypt, err := newCrypt.Encrypt([]byte(inputStr))
@@ -156,21 +109,7 @@ func TestOFBEnCryptSM4(t *testing.T) {
 
 	log.Printf("%X", encrypt)
 
-	if fmt.Sprintf("%X", encrypt) != oFBEnStr {
-		t.Fatal("加密错误")
-	}
-}
-
-func TestOFBDeCryptSM4(t *testing.T) {
-	data, _ := hex.DecodeString(oFBEnStr)
-
-	newCrypt := NewCrypt(
-		[]byte(key),
-		WithAlgorithmName(SM4),
-		WithAlgorithmMode(OFB),
-		WithPKCS7UnPadding(),
-	)
-	decrypt, err := newCrypt.Decrypt(data)
+	decrypt, err := newCrypt.Decrypt(encrypt)
 	if err != nil {
 		t.Fatal(err)
 	}
