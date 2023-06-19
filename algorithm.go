@@ -6,10 +6,6 @@ const (
 	DES algorithmName = iota
 	DESEDE
 	AES
-
-	//RSA
-	//DSA
-
 	SM4
 )
 
