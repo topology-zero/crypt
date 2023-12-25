@@ -16,13 +16,18 @@ type crypt struct {
 	unPadding func(src []byte) []byte
 }
 
+type ICrypt interface {
+	Encrypt(data []byte) ([]byte, error)
+	Decrypt(data []byte) ([]byte, error)
+}
+
 type CryptOption func(c *crypt)
 
 // NewCrypt 实例化 crypt 对象
 // 注意 key 参数的长度有所限制 (没有在代码中限制)
 // 在 SM4 算法下的长度为 16 位 key := make([]byte, 16)
 // 在 DES 算法下的长度为 8 位
-func NewCrypt(key []byte, opt ...CryptOption) *crypt {
+func NewCrypt(key []byte, opt ...CryptOption) ICrypt {
 	target := new(crypt)
 	target.key = key
 
