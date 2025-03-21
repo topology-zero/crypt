@@ -12,8 +12,8 @@ type crypt struct {
 	algorithmName algorithmName
 	algorithmMode algorithmMode
 
-	padding   func(src []byte) []byte
-	unPadding func(src []byte) []byte
+	padding   func(src []byte) ([]byte, error)
+	unPadding func(src []byte) ([]byte, error)
 }
 
 type ICrypt interface {
@@ -46,7 +46,10 @@ func NewCrypt(key []byte, opt ...CryptOption) ICrypt {
 }
 
 func (c *crypt) Encrypt(data []byte) ([]byte, error) {
-	data = c.padding(data)
+	data, err := c.padding(data)
+	if err != nil {
+		return nil, err
+	}
 	block, err := c.getCipherBlock(c.algorithmName)
 	if err != nil {
 		return nil, err
@@ -66,9 +69,7 @@ func (c *crypt) Decrypt(data []byte) ([]byte, error) {
 
 	out := make([]byte, len(data))
 	block.Decrypt(out, data)
-	out = c.unPadding(out)
-
-	return out, nil
+	return c.unPadding(out)
 }
 
 func (c *crypt) getCipherBlock(name algorithmName) (cipher.Block, error) {

@@ -21,7 +21,7 @@
 ##### 安装
 
 ```shell
-go get https://github.com/topology-zero/crypt
+go get github.com/topology-zero/crypt@v1.0.3
 ```
 
 ##### 使用
